@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bone: #f2eee3;
+  --ink: #141311;
+  --lime: #ccff00;
+  --cobalt: #2b2bff;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bone);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* Editorial selection */
+::selection {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+/* Brutalist scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bone);
+  border-left: 2px solid var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink);
+}
+
+@layer base {
+  /* Big display type gets tighter tracking + optical sizing */
+  h1,
+  h2 {
+    letter-spacing: -0.04em;
+  }
+}
+
+@layer components {
+  .section-pad {
+    @apply mx-auto w-full max-w-[88rem] px-5 py-24 sm:px-8 md:py-36;
+  }
+
+  /* Hard brutalist frame */
+  .hard {
+    @apply border-2 border-ink;
+  }
+
+  /* Solid offset drop shadows (no blur) */
+  .offset-lime {
+    box-shadow: 10px 10px 0 0 var(--lime);
+  }
+  .offset-ink {
+    box-shadow: 8px 8px 0 0 var(--ink);
+  }
+  .offset-cobalt {
+    box-shadow: 8px 8px 0 0 var(--cobalt);
+  }
+  /* Interactive card: lifts into its offset on hover */
+  .offset-hover {
+    box-shadow: 0 0 0 0 var(--ink);
+    transition: box-shadow 0.28s cubic-bezier(0.21, 0.5, 0.27, 1),
+      transform 0.28s cubic-bezier(0.21, 0.5, 0.27, 1);
+  }
+  .offset-hover:hover {
+    box-shadow: 10px 10px 0 0 var(--ink);
+    transform: translate(-4px, -4px);
+  }
+
+  /* Animated underline for links */
+  .link-line {
+    background-image: linear-gradient(var(--ink), var(--ink));
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    transition: background-size 0.4s cubic-bezier(0.21, 0.5, 0.27, 1);
+  }
+  .link-line:hover {
+    background-size: 100% 2px;
+  }
+
+  /* Mono eyebrow label */
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.25em] text-ink/50;
+  }
+}
+
+/* Paper grain — dark specks over the warm bone */
+.paper {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint vertical column rules for editorial structure */
+.column-rules {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  max-width: 88rem;
+  margin: 0 auto;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0,
+    transparent calc(100% - 1px),
+    rgba(20, 19, 17, 0.06) 100%
+  );
+  background-size: 25% 100%;
+}
+
+/* Marquee edge fade removed in favor of hard edges — kept minimal */
+.marquee-mask {
+  overflow: hidden;
+}
+
+/* Big display headline shine sweep (used sparingly) */
+.shine {
+  background: linear-gradient(
+    110deg,
+    var(--ink) 0%,
+    var(--ink) 40%,
+    #6d6a60 50%,
+    var(--ink) 60%,
+    var(--ink) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Custom ring cursor target scaling handled in JS */
+@media (pointer: fine) {
+  .cursor-ring-hide * {
+    cursor: none;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
