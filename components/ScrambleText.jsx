@@ -37,7 +37,7 @@ export default function ScrambleText({ phrases, className = "", hold = 2200 }) {
           out += item.to;
         } else if (s.frame >= item.start) {
           if (!item.char || Math.random() < 0.28) item.char = rand();
-          out += `<span class="text-amber">${item.char}</span>`;
+          out += `<span class="text-indigo-400">${item.char}</span>`;
         } else {
           out += item.from;
         }

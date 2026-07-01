@@ -109,7 +109,7 @@ export default function CommandPalette() {
           transition={{ duration: 0.2 }}
         >
           <div
-            className="absolute inset-0 bg-espresso/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-base/70 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
 
@@ -118,26 +118,26 @@ export default function CommandPalette() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.21, 0.5, 0.27, 1] }}
-            className="soft-card relative z-10 w-full max-w-xl overflow-hidden shadow-2xl"
+            className="bento relative z-10 w-full max-w-xl overflow-hidden !p-0 shadow-2xl"
           >
-            <div className="flex items-center gap-3 border-b border-cream/10 px-4">
-              <Search size={18} className="text-cream/40" />
+            <div className="flex items-center gap-3 border-b border-white/10 px-4">
+              <Search size={18} className="text-white/40" />
               <input
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onInputKey}
                 placeholder="Jump to a section or run a command…"
-                className="w-full bg-transparent py-4 text-[15px] text-cream placeholder:text-cream/35 focus:outline-none"
+                className="w-full bg-transparent py-4 text-[15px] text-white placeholder:text-white/35 focus:outline-none"
               />
-              <kbd className="hidden rounded-md border border-cream/15 bg-cream/5 px-2 py-0.5 font-mono text-[10px] text-cream/45 sm:block">
+              <kbd className="hidden rounded-md border border-white/15 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-white/45 sm:block">
                 ESC
               </kbd>
             </div>
 
             <ul className="max-h-80 overflow-y-auto p-2">
               {filtered.length === 0 && (
-                <li className="px-3 py-6 text-center text-sm text-cream/40">
+                <li className="px-3 py-6 text-center text-sm text-white/40">
                   No matches for “{query}”
                 </li>
               )}
@@ -149,27 +149,27 @@ export default function CommandPalette() {
                     <button
                       onClick={() => select(item)}
                       onMouseEnter={() => setActive(i)}
-                      className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors ${
-                        isActive ? "bg-cream/[0.07]" : "hover:bg-cream/[0.04]"
+                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${
+                        isActive ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"
                       }`}
                     >
                       <span
-                        className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl ${
+                        className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
                           isActive
-                            ? "bg-gradient-to-br from-amber to-coral text-espresso"
-                            : "bg-cream/5 text-cream/50"
+                            ? "bg-gradient-to-br from-indigo-500 to-cyan-400 text-white"
+                            : "bg-white/5 text-white/50"
                         }`}
                       >
                         <Icon size={15} />
                       </span>
                       <span className="flex-1">
-                        <span className="block text-sm text-cream/90">{item.label}</span>
-                        <span className="block font-mono text-xs text-cream/35">{item.hint}</span>
+                        <span className="block text-sm text-white/90">{item.label}</span>
+                        <span className="block font-mono text-xs text-white/35">{item.hint}</span>
                       </span>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-cream/30">
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-white/30">
                         {item.group}
                       </span>
-                      {isActive && <CornerDownLeft size={14} className="text-cream/50" />}
+                      {isActive && <CornerDownLeft size={14} className="text-white/50" />}
                     </button>
                   </li>
                 );

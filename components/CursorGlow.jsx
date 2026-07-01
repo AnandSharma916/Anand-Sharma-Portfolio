@@ -3,10 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
-/**
- * Soft warm glow that trails the cursor — peach/amber radial light that
- * suits the dark espresso backdrop. Fine pointers only.
- */
+/** Soft indigo glow trailing the cursor over the dark bento backdrop. */
 export default function CursorGlow() {
   const [enabled, setEnabled] = useState(false);
   const x = useMotionValue(-300);
@@ -34,7 +31,7 @@ export default function CursorGlow() {
         x: sx,
         y: sy,
         background:
-          "radial-gradient(circle, rgba(255,158,94,0.14) 0%, rgba(255,94,126,0.06) 42%, transparent 70%)",
+          "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(34,211,238,0.05) 42%, transparent 70%)",
       }}
     />
   );

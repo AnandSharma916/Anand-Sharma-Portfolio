@@ -8,37 +8,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Warm Sunset palette — espresso night + amber/coral/peach glow
-        espresso: "#171012",
-        "espresso-2": "#211619",
-        "espresso-3": "#2C1E22",
-        cream: "#F3E7DA",
-        amber: {
-          DEFAULT: "#FF9E5E",
-          soft: "#FFB884",
-        },
-        coral: {
-          DEFAULT: "#FF5E7E",
-          soft: "#FF89A0",
-        },
-        peach: "#FFC98B",
+        // Bento dark base — deep slate panels; accents use Tailwind's
+        // built-in indigo / violet / emerald / rose / amber / cyan.
+        base: "#0A0C11",
+        panel: "#12151D",
+        "panel-2": "#171C27",
+        line: "rgba(255,255,255,0.08)",
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
       },
       animation: {
         "gradient-x": "gradient-x 8s ease infinite",
-        float: "float 8s ease-in-out infinite",
-        "float-slow": "float 12s ease-in-out infinite",
-        "spin-slower": "spin 34s linear infinite",
-        blob: "blob 22s ease-in-out infinite",
-        "glow-pulse": "glow-pulse 5s ease-in-out infinite",
-        shimmer: "shimmer 2.6s linear infinite",
+        float: "float 7s ease-in-out infinite",
+        "spin-slower": "spin 30s linear infinite",
+        "glow-pulse": "glow-pulse 4s ease-in-out infinite",
+        shimmer: "shimmer 2.5s linear infinite",
         blink: "blink 1.1s steps(2, start) infinite",
-        marquee: "marquee 34s linear infinite",
-        "marquee-reverse": "marquee 34s linear infinite reverse",
+        marquee: "marquee 32s linear infinite",
+        "marquee-reverse": "marquee 32s linear infinite reverse",
+        "border-spin": "border-spin 6s linear infinite",
       },
       keyframes: {
         "gradient-x": {
@@ -47,7 +38,7 @@ module.exports = {
         },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-20px)" },
+          "50%": { transform: "translateY(-14px)" },
         },
         marquee: {
           "0%": { transform: "translateX(0)" },
@@ -61,23 +52,13 @@ module.exports = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
         },
-        blob: {
-          "0%, 100%": {
-            transform: "translate(0px, 0px) scale(1)",
-            borderRadius: "42% 58% 70% 30% / 45% 45% 55% 55%",
-          },
-          "33%": {
-            transform: "translate(40px, -50px) scale(1.12)",
-            borderRadius: "60% 40% 33% 67% / 60% 35% 65% 40%",
-          },
-          "66%": {
-            transform: "translate(-30px, 30px) scale(0.92)",
-            borderRadius: "35% 65% 55% 45% / 55% 60% 40% 45%",
-          },
-        },
         "glow-pulse": {
-          "0%, 100%": { opacity: "0.5", transform: "scale(1)" },
-          "50%": { opacity: "0.85", transform: "scale(1.05)" },
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.75" },
+        },
+        "border-spin": {
+          "0%": { "--angle": "0deg" },
+          "100%": { "--angle": "360deg" },
         },
       },
     },

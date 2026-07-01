@@ -1,11 +1,10 @@
 import "./globals.css";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import { profile } from "@/lib/data";
 
-const display = Fraunces({
+const display = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });

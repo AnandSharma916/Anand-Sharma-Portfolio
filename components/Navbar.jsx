@@ -24,20 +24,17 @@ export default function Navbar() {
       className="fixed inset-x-0 top-0 z-[60] flex justify-center px-4 pt-4"
     >
       <nav
-        className={`flex w-full max-w-5xl items-center justify-between rounded-full px-5 py-3 transition-all duration-300 ${
+        className={`flex w-full max-w-5xl items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-300 ${
           scrolled
-            ? "border border-cream/10 bg-espresso-2/70 backdrop-blur-xl shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9)]"
+            ? "border border-white/10 bg-panel/70 backdrop-blur-xl shadow-[0_20px_50px_-30px_rgba(0,0,0,1)]"
             : "border border-transparent"
         }`}
       >
-        <a
-          href="#top"
-          className="group flex items-center gap-2.5 font-display text-lg font-semibold"
-        >
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-amber to-coral font-sans text-sm font-bold text-espresso">
+        <a href="#top" className="group flex items-center gap-2.5 font-display text-base font-bold">
+          <span className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white">
             {profile.firstName[0]}
           </span>
-          <span className="hidden italic sm:block">{profile.firstName}</span>
+          <span className="hidden sm:block">{profile.name}</span>
         </a>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -45,7 +42,7 @@ export default function Navbar() {
             <a
               key={l.href}
               href={l.href}
-              className="rounded-full px-3.5 py-2 text-sm text-cream/60 transition-colors hover:bg-cream/5 hover:text-cream"
+              className="rounded-xl px-3.5 py-2 text-sm text-white/60 transition-colors hover:bg-white/5 hover:text-white"
             >
               {l.label}
             </a>
@@ -55,21 +52,21 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-            className="hidden items-center gap-2 rounded-full border border-cream/10 bg-cream/[0.03] px-3 py-2 text-sm text-cream/50 transition-colors hover:border-cream/20 hover:text-cream/80 md:flex"
+            className="hidden items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/50 transition-colors hover:border-white/20 hover:text-white/80 md:flex"
             aria-label="Open command palette"
           >
             <Command size={13} />
-            <kbd className="font-mono text-[10px] text-cream/45">K</kbd>
+            <kbd className="font-mono text-[10px] text-white/45">K</kbd>
           </button>
           <a
             href="#contact"
-            className="hidden rounded-full bg-gradient-to-r from-amber to-coral px-5 py-2 text-sm font-semibold text-espresso transition-transform hover:scale-[1.04] md:block"
+            className="hidden rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.04] md:block"
           >
             Let&apos;s talk
           </a>
           <button
             onClick={() => setOpen((v) => !v)}
-            className="grid h-9 w-9 place-items-center rounded-full text-cream/80 hover:bg-cream/5 md:hidden"
+            className="grid h-9 w-9 place-items-center rounded-xl text-white/80 hover:bg-white/5 md:hidden"
             aria-label="Toggle menu"
           >
             {open ? <X size={20} /> : <Menu size={20} />}
@@ -83,14 +80,14 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute top-20 w-[calc(100%-2rem)] max-w-5xl rounded-3xl border border-cream/10 bg-espresso-2/90 p-3 backdrop-blur-xl md:hidden"
+            className="absolute top-[4.5rem] w-[calc(100%-2rem)] max-w-5xl rounded-2xl border border-white/10 bg-panel/95 p-3 backdrop-blur-xl md:hidden"
           >
             {navLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-2xl px-4 py-3 text-cream/70 hover:bg-cream/5 hover:text-cream"
+                className="block rounded-xl px-4 py-3 text-white/70 hover:bg-white/5 hover:text-white"
               >
                 {l.label}
               </a>

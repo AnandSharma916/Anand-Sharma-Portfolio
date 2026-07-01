@@ -12,10 +12,10 @@ function Row({ reverse }) {
     >
       {items.map((t, i) => (
         <span key={i} className="flex items-center">
-          <span className="px-7 font-display text-3xl font-medium italic text-cream/70 transition-colors duration-300 hover:text-cream md:text-4xl">
+          <span className="px-5 font-display text-xl font-semibold text-white/40 transition-colors duration-300 hover:text-white md:text-2xl">
             {t}
           </span>
-          <span className="text-xl text-coral/70">✳</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" />
         </span>
       ))}
     </div>
@@ -24,11 +24,13 @@ function Row({ reverse }) {
 
 export default function Marquee() {
   return (
-    <div className="relative space-y-3 overflow-hidden border-y border-cream/10 py-8">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-40 bg-gradient-to-r from-espresso to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-40 bg-gradient-to-l from-espresso to-transparent" />
-      <Row />
-      <Row reverse />
+    <div className="section-pad !py-6">
+      <div className="relative space-y-3 overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-panel py-6">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 bg-gradient-to-r from-panel to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 bg-gradient-to-l from-panel to-transparent" />
+        <Row />
+        <Row reverse />
+      </div>
     </div>
   );
 }
