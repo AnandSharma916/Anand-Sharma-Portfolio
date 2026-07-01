@@ -22,13 +22,13 @@ export default function Preloader() {
     let raf;
     let endTimer;
     const start = performance.now();
-    const duration = 1400;
+    const duration = 1500;
     const tick = (now) => {
       const p = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - p, 3);
       setCount(Math.round(eased * 100));
       if (p < 1) raf = requestAnimationFrame(tick);
-      else endTimer = setTimeout(() => setDone(true), 400);
+      else endTimer = setTimeout(() => setDone(true), 450);
     };
     raf = requestAnimationFrame(tick);
     return () => {
@@ -45,39 +45,38 @@ export default function Preloader() {
     <AnimatePresence>
       {!done && (
         <motion.div
-          className="fixed inset-0 z-[100] flex flex-col justify-between bg-ink px-5 py-6 text-bone sm:px-8"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-espresso"
           exit={{ y: "-100%" }}
-          transition={{ duration: 0.9, ease: EASE }}
+          transition={{ duration: 0.85, ease: EASE }}
         >
-          <div className="flex items-center justify-between font-mono text-xs uppercase tracking-[0.3em] text-bone/50">
-            <span>Portfolio</span>
-            <span>©2026</span>
+          <div className="overflow-hidden">
+            <motion.h1
+              initial={{ y: "115%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
+              className="gradient-text text-glow font-display text-5xl font-semibold italic tracking-tight md:text-7xl"
+            >
+              {profile.name}
+            </motion.h1>
           </div>
 
-          <div className="flex flex-1 items-center">
-            <div className="overflow-hidden">
-              <motion.h1
-                initial={{ y: "115%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
-                className="font-display text-[16vw] font-extrabold leading-[0.85] tracking-tightest md:text-[11rem]"
-              >
-                {profile.firstName}
-                <span className="text-lime">.</span>
-              </motion.h1>
-            </div>
-          </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-4 font-mono text-sm uppercase tracking-[0.3em] text-cream/40"
+          >
+            {profile.roles[0]}
+          </motion.p>
 
-          <div>
-            <div className="mb-3 flex items-end justify-between font-mono text-xs uppercase tracking-[0.2em] text-bone/60">
-              <span>Loading</span>
-              <span className="font-display text-4xl font-bold tabular-nums text-bone">
-                {count}%
-              </span>
+          <div className="absolute inset-x-0 bottom-0">
+            <div className="mx-auto flex max-w-6xl items-end justify-between px-6 pb-4 font-mono text-xs text-cream/40">
+              <span>LOADING</span>
+              <span className="text-2xl tabular-nums text-cream/80">{count}%</span>
             </div>
-            <div className="h-[3px] w-full bg-bone/15">
+            <div className="h-[2px] w-full bg-cream/10">
               <div
-                className="h-full bg-lime"
+                className="h-full bg-gradient-to-r from-amber via-coral to-peach"
                 style={{ width: `${count}%` }}
               />
             </div>

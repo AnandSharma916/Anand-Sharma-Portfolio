@@ -4,22 +4,25 @@ import TextReveal from "./TextReveal";
 export default function SectionHeading({ index, eyebrow, title, subtitle }) {
   return (
     <div className="mb-14 md:mb-20">
-      <Reveal y={0}>
-        <div className="flex items-center justify-between border-t-2 border-ink pt-4">
-          <span className="eyebrow">{eyebrow}</span>
-          <span className="font-mono text-sm text-ink/45">({index})</span>
+      <Reveal y={12}>
+        <div className="flex items-center gap-3 font-mono text-sm">
+          <span className="gradient-text font-semibold">{index}</span>
+          <span className="h-px w-8 bg-gradient-to-r from-coral to-transparent" />
+          <span className="uppercase tracking-[0.25em] text-cream/50">
+            {eyebrow}
+          </span>
         </div>
       </Reveal>
 
       <TextReveal
         as="h2"
         text={title}
-        className="mt-7 max-w-4xl font-display text-[2.6rem] font-extrabold leading-[0.92] tracking-tightest sm:text-6xl"
+        className="mt-5 max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-tight text-cream md:text-6xl"
       />
 
       {subtitle && (
         <Reveal delay={0.12}>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink/60">
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-cream/55">
             {subtitle}
           </p>
         </Reveal>

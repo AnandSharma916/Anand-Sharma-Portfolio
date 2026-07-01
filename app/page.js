@@ -15,11 +15,12 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-bone">
+    <main className="relative min-h-screen bg-espresso">
       <Preloader />
       <CommandPalette />
-      <div className="column-rules" />
-      <div className="paper" />
+      <div className="glow" />
+      <div className="glow-extra" />
+      <div className="grain" />
       <CursorGlow />
       <ScrollProgress />
 

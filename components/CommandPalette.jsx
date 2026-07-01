@@ -109,7 +109,7 @@ export default function CommandPalette() {
           transition={{ duration: 0.2 }}
         >
           <div
-            className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-espresso/70 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
 
@@ -118,26 +118,26 @@ export default function CommandPalette() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.21, 0.5, 0.27, 1] }}
-            className="offset-ink relative z-10 w-full max-w-xl overflow-hidden border-2 border-ink bg-bone"
+            className="soft-card relative z-10 w-full max-w-xl overflow-hidden shadow-2xl"
           >
-            <div className="flex items-center gap-3 border-b-2 border-ink px-4">
-              <Search size={18} className="text-ink/50" />
+            <div className="flex items-center gap-3 border-b border-cream/10 px-4">
+              <Search size={18} className="text-cream/40" />
               <input
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onInputKey}
                 placeholder="Jump to a section or run a command…"
-                className="w-full bg-transparent py-4 font-mono text-[14px] text-ink placeholder:text-ink/40 focus:outline-none"
+                className="w-full bg-transparent py-4 text-[15px] text-cream placeholder:text-cream/35 focus:outline-none"
               />
-              <kbd className="hidden border border-ink/30 bg-bone-2 px-2 py-0.5 font-mono text-[10px] text-ink/60 sm:block">
+              <kbd className="hidden rounded-md border border-cream/15 bg-cream/5 px-2 py-0.5 font-mono text-[10px] text-cream/45 sm:block">
                 ESC
               </kbd>
             </div>
 
             <ul className="max-h-80 overflow-y-auto p-2">
               {filtered.length === 0 && (
-                <li className="px-3 py-6 text-center font-mono text-sm text-ink/50">
+                <li className="px-3 py-6 text-center text-sm text-cream/40">
                   No matches for “{query}”
                 </li>
               )}
@@ -149,25 +149,27 @@ export default function CommandPalette() {
                     <button
                       onClick={() => select(item)}
                       onMouseEnter={() => setActive(i)}
-                      className={`flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                        isActive ? "bg-lime" : "hover:bg-bone-2"
+                      className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors ${
+                        isActive ? "bg-cream/[0.07]" : "hover:bg-cream/[0.04]"
                       }`}
                     >
                       <span
-                        className={`grid h-8 w-8 shrink-0 place-items-center border-2 border-ink ${
-                          isActive ? "bg-ink text-lime" : "bg-bone text-ink"
+                        className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl ${
+                          isActive
+                            ? "bg-gradient-to-br from-amber to-coral text-espresso"
+                            : "bg-cream/5 text-cream/50"
                         }`}
                       >
                         <Icon size={15} />
                       </span>
                       <span className="flex-1">
-                        <span className="block text-sm font-semibold text-ink">{item.label}</span>
-                        <span className="block font-mono text-xs text-ink/50">{item.hint}</span>
+                        <span className="block text-sm text-cream/90">{item.label}</span>
+                        <span className="block font-mono text-xs text-cream/35">{item.hint}</span>
                       </span>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-cream/30">
                         {item.group}
                       </span>
-                      {isActive && <CornerDownLeft size={14} className="text-ink" />}
+                      {isActive && <CornerDownLeft size={14} className="text-cream/50" />}
                     </button>
                   </li>
                 );

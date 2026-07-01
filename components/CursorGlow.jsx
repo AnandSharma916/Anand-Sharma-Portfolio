@@ -4,28 +4,21 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 /**
- * Brutalist ring cursor: a hollow ink ring that trails the pointer and
- * snaps larger + fills lime when hovering links/buttons. Fine pointers only.
+ * Soft warm glow that trails the cursor — peach/amber radial light that
+ * suits the dark espresso backdrop. Fine pointers only.
  */
 export default function CursorGlow() {
   const [enabled, setEnabled] = useState(false);
-  const [hovering, setHovering] = useState(false);
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 500, damping: 40, mass: 0.5 });
-  const sy = useSpring(y, { stiffness: 500, damping: 40, mass: 0.5 });
+  const x = useMotionValue(-300);
+  const y = useMotionValue(-300);
+  const sx = useSpring(x, { stiffness: 130, damping: 22, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 130, damping: 22, mass: 0.4 });
 
   useEffect(() => {
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    setEnabled(true);
-
+    if (window.matchMedia("(pointer: fine)").matches) setEnabled(true);
     const move = (e) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      const el = e.target;
-      setHovering(
-        !!el.closest?.("a, button, [data-cursor], input, textarea")
-      );
+      x.set(e.clientX - 250);
+      y.set(e.clientY - 250);
     };
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
@@ -36,18 +29,13 @@ export default function CursorGlow() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[70] hidden md:block"
-      style={{ x: sx, y: sy }}
-    >
-      <motion.div
-        animate={{
-          width: hovering ? 56 : 26,
-          height: hovering ? 56 : 26,
-          backgroundColor: hovering ? "rgba(204,255,0,0.9)" : "rgba(204,255,0,0)",
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 28 }}
-        className="-translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink"
-      />
-    </motion.div>
+      className="pointer-events-none fixed z-[5] h-[500px] w-[500px] rounded-full"
+      style={{
+        x: sx,
+        y: sy,
+        background:
+          "radial-gradient(circle, rgba(255,158,94,0.14) 0%, rgba(255,94,126,0.06) 42%, transparent 70%)",
+      }}
+    />
   );
 }

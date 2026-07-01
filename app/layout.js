@@ -1,14 +1,15 @@
 import "./globals.css";
-import { Syne, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import { profile } from "@/lib/data";
 
-const display = Syne({
+const display = Fraunces({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
-const sans = Space_Grotesk({
+const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",

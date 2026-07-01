@@ -2,19 +2,23 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, Sparkles, MapPin } from "lucide-react";
 import { profile, stats } from "@/lib/data";
 import MagneticButton from "./MagneticButton";
 import ScrambleText from "./ScrambleText";
 import CountUp from "./CountUp";
 
-const EASE = [0.21, 0.5, 0.27, 1];
-const line = {
-  hidden: { y: "115%" },
-  show: (i) => ({
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 26 },
+  show: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.85, ease: EASE, delay: 0.35 + i * 0.12 },
-  }),
+    transition: { duration: 0.75, ease: [0.21, 0.5, 0.27, 1] },
+  },
 };
 
 export default function Hero() {
@@ -24,138 +28,162 @@ export default function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -70]);
-  const op = useTransform(scrollYProgress, [0, 0.9], [1, reduce ? 1 : 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -110]);
+  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, reduce ? 1 : 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, reduce ? 1 : 0.95]);
+  const orbA = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 170]);
+  const orbB = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 240]);
 
   return (
     <section
       ref={ref}
       id="top"
-      className="relative min-h-screen overflow-hidden px-5 pt-28 sm:px-8 md:pt-32"
+      className="relative flex min-h-screen items-center justify-center px-6 pt-28"
     >
+      {/* floating warm orbs */}
       <motion.div
-        style={{ y, opacity: op }}
-        className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-[88rem] flex-col justify-center"
+        aria-hidden
+        style={{ y: orbA }}
+        className="pointer-events-none absolute left-[9%] top-[24%]"
       >
-        {/* eyebrow row */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-4 font-mono text-xs uppercase tracking-[0.2em] text-ink/60"
-        >
-          <span className="flex items-center gap-2">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-deep opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-lime-deep" />
+          animate={{ y: [0, -26, 0], x: [0, 12, 0] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+          className="h-24 w-24 rounded-full bg-gradient-to-br from-amber to-coral opacity-30 blur-2xl"
+        />
+      </motion.div>
+      <motion.div
+        aria-hidden
+        style={{ y: orbB }}
+        className="pointer-events-none absolute right-[11%] top-[30%]"
+      >
+        <motion.div
+          animate={{ y: [0, 24, 0], x: [0, -16, 0] }}
+          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+          className="h-32 w-32 rounded-full bg-gradient-to-br from-coral to-peach opacity-25 blur-2xl"
+        />
+      </motion.div>
+
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        style={{ y, opacity, scale }}
+        className="relative z-10 mx-auto w-full max-w-4xl text-center"
+      >
+        {profile.available && (
+          <motion.div variants={item} className="mb-8 flex justify-center">
+            <span className="gradient-pill inline-flex items-center gap-2 px-4 py-1.5 text-sm text-cream/80">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-amber" />
+              </span>
+              Available for new projects
             </span>
-            Available for work — Anand Sharma
-          </span>
-          <span>{profile.location}</span>
+          </motion.div>
+        )}
+
+        <motion.div
+          variants={item}
+          className="mb-5 flex items-center justify-center gap-2 font-mono text-sm text-amber"
+        >
+          <Sparkles size={14} />
+          <span>Hi, I&apos;m</span>
         </motion.div>
 
-        {/* headline */}
-        <h1 className="mt-8 font-display font-extrabold uppercase leading-[0.82] tracking-tightest">
-          <span className="block overflow-hidden">
-            <motion.span
-              variants={line}
-              custom={0}
-              initial="hidden"
-              animate="show"
-              className="block text-[14vw] md:text-[11rem]"
-            >
-              Full–Stack
-            </motion.span>
+        <motion.h1
+          variants={item}
+          className="font-display text-6xl font-medium leading-[0.95] tracking-tight sm:text-7xl md:text-8xl"
+        >
+          <span className="text-cream">{profile.firstName}</span>{" "}
+          <span className="gradient-text text-glow italic">
+            {profile.name.split(" ")[1]}
           </span>
-          <span className="mt-1 block overflow-hidden pb-[0.08em]">
-            <motion.span
-              variants={line}
-              custom={1}
-              initial="hidden"
-              animate="show"
-              className="block text-[14vw] md:text-[11rem]"
-            >
-              <span className="box-decoration-clone bg-lime px-3 text-ink">
-                Developer
-              </span>
-            </motion.span>
-          </span>
-        </h1>
+        </motion.h1>
 
-        {/* role + tagline + CTAs */}
-        <div className="mt-9 flex flex-col gap-8 border-b-2 border-ink pb-9 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-2 font-mono text-lg text-ink md:text-xl">
-              <span className="text-lime-deep">&gt;</span>
-              <ScrambleText phrases={profile.roles} className="font-semibold" />
-              <span className="inline-block h-5 w-[10px] animate-blink bg-ink" />
-            </div>
-            <p className="mt-4 text-pretty text-base leading-relaxed text-ink/70 md:text-lg">
-              {profile.tagline}
-            </p>
-          </div>
+        <motion.div
+          variants={item}
+          className="mt-7 flex h-10 items-center justify-center gap-2 text-2xl text-cream/85 sm:text-3xl"
+        >
+          <span className="font-mono text-amber">&gt;</span>
+          <ScrambleText
+            phrases={profile.roles}
+            className="font-display italic text-cream"
+          />
+          <span className="ml-0.5 inline-block h-7 w-[3px] animate-blink bg-coral" />
+        </motion.div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <MagneticButton
-              href="#projects"
-              className="group inline-flex items-center gap-2 border-2 border-ink bg-lime px-6 py-3.5 font-mono text-sm font-bold uppercase tracking-widest text-ink transition-transform hover:-translate-y-1"
-            >
-              View work
-              <ArrowDown size={16} className="transition-transform group-hover:translate-y-0.5" />
-            </MagneticButton>
-            <MagneticButton
-              href="#contact"
-              className="group inline-flex items-center gap-2 border-2 border-ink bg-bone px-6 py-3.5 font-mono text-sm font-bold uppercase tracking-widest text-ink transition-colors hover:bg-ink hover:text-bone"
-            >
-              Get in touch
-              <ArrowUpRight size={16} />
-            </MagneticButton>
-          </div>
-        </div>
+        <motion.p
+          variants={item}
+          className="mx-auto mt-7 max-w-2xl text-pretty text-lg leading-relaxed text-cream/55"
+        >
+          {profile.tagline}
+        </motion.p>
 
-        {/* stats strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x-2 md:divide-ink">
-          {stats.map((s, i) => (
+        <motion.div
+          variants={item}
+          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+        >
+          <MagneticButton
+            href="#projects"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-amber to-coral px-7 py-3.5 font-semibold text-espresso shadow-[0_10px_40px_-10px_rgba(255,94,126,0.6)]"
+          >
+            <span className="relative z-10">View my work</span>
+            <ArrowDown size={17} className="relative z-10 transition-transform group-hover:translate-y-0.5" />
+          </MagneticButton>
+          <MagneticButton
+            href="#contact"
+            className="rounded-full border border-cream/15 bg-cream/[0.03] px-7 py-3.5 font-semibold text-cream backdrop-blur-sm transition-colors hover:border-cream/30 hover:bg-cream/[0.07]"
+          >
+            Get in touch
+          </MagneticButton>
+        </motion.div>
+
+        <motion.div
+          variants={item}
+          className="mt-6 flex items-center justify-center gap-1.5 text-sm text-cream/40"
+        >
+          <MapPin size={14} /> {profile.location}
+        </motion.div>
+
+        <motion.div
+          variants={item}
+          className="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4"
+        >
+          {stats.map((s) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="border-b-2 border-ink py-6 md:border-b-0 md:px-6 md:first:pl-0"
+              whileHover={{ y: -6 }}
+              transition={{ type: "spring", stiffness: 300, damping: 18 }}
+              className="soft-card px-3 py-5"
             >
-              <div className="font-display text-4xl font-extrabold md:text-5xl">
+              <div className="gradient-text font-display text-3xl font-semibold">
                 <CountUp value={s.value} />
               </div>
-              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.15em] text-ink/50">
+              <div className="mt-1 text-xs uppercase tracking-wide text-cream/45">
                 {s.label}
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
 
-      {/* rotating scroll stamp */}
-      <div className="pointer-events-none absolute bottom-8 right-6 hidden h-28 w-28 lg:block">
-        <svg viewBox="0 0 100 100" className="h-full w-full animate-spin-slower">
-          <defs>
-            <path
-              id="stampPath"
-              d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"
-            />
-          </defs>
-          <text className="fill-ink font-mono text-[8.5px] uppercase tracking-[0.22em]">
-            <textPath href="#stampPath">
-              Scroll to explore • Scroll to explore •
-            </textPath>
-          </text>
-        </svg>
-        <div className="absolute inset-0 grid place-items-center">
-          <span className="grid h-11 w-11 place-items-center rounded-full bg-ink text-lime">
-            <ArrowDown size={18} />
-          </span>
-        </div>
-      </div>
+      <motion.a
+        href="#about"
+        aria-label="Scroll down"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-cream/40"
+      >
+        <motion.span
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
+          className="block"
+        >
+          <ArrowDown size={22} />
+        </motion.span>
+      </motion.a>
     </section>
   );
 }
