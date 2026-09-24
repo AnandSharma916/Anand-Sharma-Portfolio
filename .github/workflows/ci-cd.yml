@@ -1,0 +1,134 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'design/**'
+      - 'feat/**'
+      - 'fix/**'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'Deployment Target (vercel / dry-run)'
+        required: false
+        default: 'vercel'
+        type: choice
+        options:
+          - vercel
+          - dry-run
+
+# Prevent duplicate concurrent workflows on the same branch/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =========================================================================
+  # 1. CONTINUOUS INTEGRATION: Quality, Dependency Verification & Build Check
+  # =========================================================================
+  ci:
+    name: Build & Verify (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: ⚡ Restore Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci || npm install --prefer-offline --no-audit
+
+      - name: 🛠️ Build Next.js production bundle
+        run: |
+          npm run build
+
+      - name: 📊 Generate Build Summary
+        run: |
+          echo "### 🚀 CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ✅ Succeeded" >> $GITHUB_STEP_SUMMARY
+          echo "- **Node Version**: ${{ matrix.node-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch/Ref**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by**: \`${{ github.actor }}\` via \`${{ github.event_name }}\`" >> $GITHUB_STEP_SUMMARY
+
+  # =========================================================================
+  # 2. CONTINUOUS DEPLOYMENT: Production Deployment
+  # =========================================================================
+  deploy:
+    name: Deploy to Production
+    needs: ci
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch') && github.event.inputs.deploy_target != 'dry-run'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: 🚀 Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "⚠️ [NOTICE] VERCEL_TOKEN secret is not yet configured in repository settings."
+            echo "CI build succeeded! To enable automatic live deployments, follow the instructions below:"
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 🌐 Continuous Deployment Notice" >> $GITHUB_STEP_SUMMARY
+            echo "The CI build passed cleanly! 🎉" >> $GITHUB_STEP_SUMMARY
+            echo "To enable automated Vercel deployments, add these GitHub Secrets:" >> $GITHUB_STEP_SUMMARY
+            echo "1. \`VERCEL_TOKEN\` (from [Vercel Account Settings > Tokens](https://vercel.com/account/tokens))" >> $GITHUB_STEP_SUMMARY
+            echo "2. \`VERCEL_ORG_ID\` (from \`.vercel/project.json\` or team settings)" >> $GITHUB_STEP_SUMMARY
+            echo "3. \`VERCEL_PROJECT_ID\` (from project settings)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "> Alternatively, connecting your GitHub repository directly in [vercel.com](https://vercel.com) provides instant automated deployments with zero configuration." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo "Installing Vercel CLI..."
+          npm install --global vercel@latest
+
+          echo "Pulling Vercel environment information..."
+          vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+
+          echo "Building production artifacts..."
+          vercel build --prod --token=$VERCEL_TOKEN
+
+          echo "Deploying prebuilt artifacts to Vercel..."
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+          echo "DEPLOY_URL=$DEPLOY_URL" >> $GITHUB_ENV
+
+          echo "### 🚀 Live Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: Production" >> $GITHUB_STEP_SUMMARY
+          echo "- **Live URL**: $DEPLOY_URL" >> $GITHUB_STEP_SUMMARY

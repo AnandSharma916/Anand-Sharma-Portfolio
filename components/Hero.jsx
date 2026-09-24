@@ -1,182 +1,162 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Sparkles,
-  MapPin,
-  Github,
-  Linkedin,
-  Mail,
-} from "lucide-react";
+import { motion } from "motion/react";
+import ParallaxTilt from "react-parallax-tilt";
+import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import { profile, stats } from "@/lib/data";
-import anandPhoto from "@/public/Anand-Sharma.png";
 import ScrambleText from "./ScrambleText";
 import CountUp from "./CountUp";
+import Annotate from "./Annotate";
+import MagneticButton from "./MagneticButton";
+import { burst } from "./ConfettiButton";
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.2 } },
 };
-const cell = {
-  hidden: { opacity: 0, y: 22, scale: 0.98 },
+const item = {
+  hidden: { opacity: 0, y: 28 },
   show: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { duration: 0.55, ease: [0.21, 0.5, 0.27, 1] },
+    transition: { duration: 0.7, ease: [0.21, 0.5, 0.27, 1] },
   },
 };
 
-const statAccents = ["#6366f1", "#8b5cf6", "#22d3ee", "#f43f5e"];
-
 export default function Hero() {
   return (
-    <section id="top" className="relative px-5 pt-28 sm:px-6 md:pt-32">
+    <section id="top" className="relative overflow-hidden px-4 pt-28 xs:px-5 sm:px-6 md:pt-40 lg:px-8 3xl:px-12 3xl:pt-48">
+      {/* local glow accent behind the headline */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-24 h-[min(46rem,150vw)] w-[min(46rem,150vw)] -translate-x-1/2 rounded-full opacity-40 blur-[80px] sm:blur-[110px]"
+        style={{
+          background:
+            "conic-gradient(from 140deg, rgba(109,124,255,0.4), rgba(91,124,250,0.38), rgba(168,85,247,0.4), rgba(109,124,255,0.4))",
+          maskImage: "radial-gradient(circle, black 30%, transparent 70%)",
+        }}
+      />
+
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="mx-auto grid max-w-6xl grid-cols-2 gap-3.5 sm:gap-4 lg:auto-rows-[170px] lg:grid-flow-row-dense lg:grid-cols-4"
+        className="relative mx-auto max-w-5xl text-center 2xl:max-w-6xl 3xl:max-w-[84rem]"
       >
-        {/* Intro */}
-        <motion.div
-          variants={cell}
-          className="bento card-glow col-span-2 flex flex-col justify-between lg:row-span-2"
-          style={{ "--c": "#6366f1" }}
+        <motion.span
+          variants={item}
+          className="grad-border inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted backdrop-blur xs:px-4 xs:text-[12px] xs:tracking-[0.16em]"
         >
-          <div className="flex items-center justify-between">
-            <span className="kicker">Portfolio — &apos;26</span>
-            {profile.available && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-xs text-emerald-300">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                </span>
-                Available
-              </span>
-            )}
-          </div>
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pink-400 opacity-70" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-pink-400 shadow-[0_0_10px_#5b7cfa]" />
+          </span>
+          {profile.available ? "Open to work" : "Currently building"} — {profile.location.split(",")[0]}
+        </motion.span>
 
-          <div className="py-6">
-            <div className="mb-3 flex items-center gap-2 font-mono text-sm text-indigo-300">
-              <Sparkles size={14} /> Hi, I&apos;m
-            </div>
-            <h1 className="font-display text-4xl font-extrabold leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="text-white">{profile.firstName}</span>{" "}
-              <span className="gradient-text">{profile.name.split(" ")[1]}</span>
-            </h1>
-            <div className="mt-4 flex items-center gap-2 text-lg text-white/70 sm:text-xl">
-              <span className="font-mono text-indigo-300">&gt;</span>
-              <ScrambleText phrases={profile.roles} className="font-medium text-white/90" />
-              <span className="inline-block h-5 w-[3px] animate-blink bg-cyan-400" />
-            </div>
-            <p className="mt-4 max-w-lg text-pretty leading-relaxed text-white/55">
-              {profile.tagline}
-            </p>
-          </div>
+        <motion.h1
+          variants={item}
+          className="mt-6 font-display text-[clamp(2rem,8.6vw,7rem)] font-extrabold leading-[0.95] tracking-tight sm:mt-8 sm:leading-[0.92] 3xl:text-[clamp(7rem,5.5vw,8.75rem)]"
+        >
+          <span className="block text-ink">{profile.name}</span>
+          <span className="gradient-text block">
+            <Annotate type="underline" color="#a855f7" strokeWidth={3} delay={1000}>
+              builds the web.
+            </Annotate>
+          </span>
+        </motion.h1>
 
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="#projects"
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(99,102,241,0.7)] transition-transform hover:scale-[1.03]"
-            >
-              View my work
-              <ArrowDownRight size={16} className="transition-transform group-hover:translate-y-0.5" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]"
-            >
-              Get in touch
-            </a>
-          </div>
+        <motion.div
+          variants={item}
+          className="mt-6 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[1rem]/[1.5rem] text-ink-muted xs:text-lg sm:text-xl"
+        >
+          <span className="font-mono text-blue-600">&lt;/&gt;</span>
+          <ScrambleText phrases={profile.roles} className="font-medium text-ink" />
+          <span className="inline-block h-5 w-[3px] animate-blink bg-pink-400" />
         </motion.div>
 
-        {/* Photo */}
-        <motion.div
-          variants={cell}
-          className="bento group relative col-span-2 !p-0 sm:col-span-1 lg:row-span-2"
+        <motion.p
+          variants={item}
+          className="mx-auto mt-6 max-w-2xl text-pretty text-[1rem]/[1.5rem] leading-relaxed text-ink-muted xs:text-lg 3xl:max-w-3xl 3xl:text-xl"
         >
-          <div className="relative h-full min-h-[240px] w-full overflow-hidden rounded-[1.6rem]">
-            <Image
-              src={anandPhoto}
-              alt={profile.name}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 25vw"
-              placeholder="blur"
-              className="object-cover object-[52%_20%] transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-base/85 via-base/10 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-              <span className="font-display text-lg font-bold">{profile.name}</span>
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/10 backdrop-blur-md transition-colors group-hover:bg-indigo-500">
-                <ArrowUpRight size={16} />
-              </span>
-            </div>
-          </div>
-        </motion.div>
+          {profile.tagline}
+        </motion.p>
 
-        {/* Availability */}
         <motion.div
-          variants={cell}
-          className="bento bento-hover card-glow flex flex-col justify-between"
-          style={{ "--c": "#10b981" }}
+          variants={item}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10 sm:gap-4"
         >
-          <MapPin size={18} className="text-emerald-300" />
-          <div>
-            <div className="font-display text-lg font-bold leading-tight">
-              {profile.location.split(",")[0]}
-            </div>
-            <div className="kicker mt-1">Based in India</div>
-          </div>
-        </motion.div>
-
-        {/* Stat cards */}
-        {stats.map((s, i) => (
-          <motion.div
-            key={s.label}
-            variants={cell}
-            className="bento bento-hover card-glow flex flex-col justify-between"
-            style={{ "--c": statAccents[i % statAccents.length] }}
+          <a
+            href="#projects"
+            onClick={() => burst(0.5)}
+            className="btn-gradient group text-[1rem]/[1.5rem]"
           >
-            <div
-              className="font-display text-4xl font-extrabold tracking-tight"
-              style={{ color: statAccents[i % statAccents.length] }}
-            >
-              <CountUp value={s.value} />
-            </div>
-            <div className="kicker">{s.label}</div>
-          </motion.div>
-        ))}
-
-        {/* Socials */}
-        <motion.div
-          variants={cell}
-          className="bento bento-hover card-glow flex flex-col justify-between"
-          style={{ "--c": "#f59e0b" }}
-        >
-          <span className="kicker">Connect</span>
+            View projects
+            <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex max-w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-white/[0.05] xs:px-6 xs:text-[1rem]/[1.5rem]"
+          >
+            Get in touch
+          </a>
           <div className="flex gap-2">
             {[
-              { Icon: Github, href: profile.socials[0]?.href || "#" },
-              { Icon: Linkedin, href: profile.socials[1]?.href || "#" },
-              { Icon: Mail, href: `mailto:${profile.email}` },
-            ].map(({ Icon, href }, i) => (
-              <a
+              {
+                Icon: Github,
+                href: profile.socials[0]?.href || "#",
+                label: profile.socials[0]?.handle || "GitHub",
+              },
+              {
+                Icon: Linkedin,
+                href: profile.socials[1]?.href || "#",
+                label: profile.socials[1]?.handle || "LinkedIn",
+              },
+              { Icon: Mail, href: `mailto:${profile.email}`, label: profile.email },
+            ].map(({ Icon, href, label }, i) => (
+              <MagneticButton
                 key={i}
                 href={href}
+                title={label}
+                aria-label={label}
                 target={href.startsWith("http") ? "_blank" : undefined}
                 rel="noreferrer"
-                className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-white/70 transition-colors hover:border-white/25 hover:bg-white/10 hover:text-white"
+                strength={0.5}
+                className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-ink-muted transition-colors hover:border-blue-600/50 hover:text-ink"
               >
-                <Icon size={16} />
-              </a>
+                <Icon size={18} />
+              </MagneticButton>
             ))}
           </div>
+        </motion.div>
+
+        {/* Stat row — interactive 3D-tilt cards with a moving glare sheen */}
+        <motion.div
+          variants={item}
+          className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-2.5 xs:gap-3 sm:mt-16 sm:grid-cols-4 3xl:max-w-5xl 3xl:gap-5"
+        >
+          {stats.map((s) => (
+            <ParallaxTilt
+              key={s.label}
+              glareEnable
+              glareMaxOpacity={0.22}
+              glareColor="#bfb8e7"
+              glarePosition="all"
+              glareBorderRadius="16px"
+              tiltMaxAngleX={14}
+              tiltMaxAngleY={14}
+              scale={1.04}
+              transitionSpeed={1200}
+              className="glass grad-border overflow-hidden px-3 py-4 xs:px-4 xs:py-5 3xl:px-6 3xl:py-7"
+            >
+              <div className="gradient-text font-display text-2xl font-extrabold xs:text-3xl sm:text-4xl 3xl:text-5xl">
+                <CountUp value={s.value} />
+              </div>
+              <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted xs:text-[11px] xs:tracking-[0.16em]">
+                {s.label}
+              </div>
+            </ParallaxTilt>
+          ))}
         </motion.div>
       </motion.div>
     </section>

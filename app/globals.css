@@ -3,25 +3,64 @@
 @tailwind utilities;
 
 :root {
-  --base: #0a0c11;
+  --base: #0a0a10;
+  --surface: #14141f;
+  --ink: #f3f4f8;
+  --muted: #c8ccd8;
+  --blue: #5b7cfa;
+  --blue-deep: #4f5bd5;
+  --purple: #a855f7;
+  --indigo: #6d7cff;
 }
 
+/* No `-webkit-font-smoothing: antialiased` — it thins light-on-dark text and
+   costs legibility. Default subpixel rendering keeps strokes at full weight. */
 * {
-  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 html {
   scroll-behavior: smooth;
+  /* Stop iOS/Android from inflating text in landscape, which reflows layouts
+     that were measured against the portrait width. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Lenis smooth-scroll: let the library own the scroll animation. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
   background-color: var(--base);
-  color: #e6e8ee;
+  color: var(--ink);
   overflow-x: hidden;
+  /* Long unbreakable strings (emails, handles, URLs) wrap instead of forcing
+     a horizontal overflow that `overflow-x: hidden` would silently clip. */
+  overflow-wrap: break-word;
+}
+
+/* Media never outgrows its column, at any viewport. */
+img,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.4);
+  background: rgba(91, 124, 250, 0.32);
   color: #fff;
 }
 
@@ -32,99 +71,141 @@ body {
   background: var(--base);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(#6366f1, #22d3ee);
+  background: linear-gradient(var(--blue), var(--indigo), var(--purple));
   border-radius: 999px;
   border: 2px solid var(--base);
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @layer components {
+  /* One container for every section. Gutters shrink to 16px on a 300px
+     handset; the max width steps up past 2xl so 1920/2560px monitors get a
+     wider measure instead of a 1152px column marooned in empty space. */
   .section-pad {
-    @apply mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 md:py-24;
+    @apply mx-auto w-full max-w-6xl px-4 py-8 xs:px-5 sm:px-6 md:py-14 lg:px-8
+      2xl:max-w-[82rem] 3xl:max-w-[96rem] 3xl:px-12 3xl:py-20 4xl:max-w-[112rem];
   }
 
-  /* The bento card */
-  .bento {
-    @apply relative overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-panel p-6;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-      0 24px 50px -30px rgba(0, 0, 0, 0.9);
+  /* Translucent dark card with soft depth */
+  .glass {
+    @apply relative rounded-2xl border border-white/[0.09] bg-white/[0.035] backdrop-blur-md;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 20px 44px -26px rgba(0, 0, 0, 0.85);
   }
-  .bento-hover {
+  .glass-hover {
     @apply transition-all duration-300;
   }
-  .bento-hover:hover {
-    @apply -translate-y-1 border-white/20 bg-panel-2;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
-      0 30px 60px -30px rgba(0, 0, 0, 1);
+  .glass-hover:hover {
+    @apply -translate-y-1 border-white/20 bg-white/[0.06];
+    box-shadow: 0 20px 44px -20px rgba(91, 124, 250, 0.4), 0 40px 70px -40px rgba(168, 85, 247, 0.35);
   }
 
+  /* Animated gradient text (blue -> indigo -> purple) */
   .gradient-text {
-    @apply bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent;
+    background: linear-gradient(100deg, #5b7cfa, #7c93ff 28%, #a855f7 68%, #c084fc);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    @apply animate-gradient-x;
   }
 
   /* Small mono label */
   .kicker {
-    @apply font-mono text-[11px] uppercase tracking-[0.2em] text-white/40;
+    @apply font-mono text-[12px] font-medium uppercase tracking-[0.18em] text-ink-muted;
+  }
+
+  /* Gradient pill button */
+  .btn-gradient {
+    @apply relative inline-flex max-w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition-transform xs:px-6;
+    background: linear-gradient(100deg, #5b7cfa, #6d5cf5 50%, #a855f7);
+    background-size: 150% auto;
+    box-shadow: 0 14px 40px -12px rgba(91, 124, 250, 0.55);
+  }
+  .btn-gradient:hover {
+    @apply -translate-y-0.5;
+    background-position: right center;
   }
 }
 
-/* Soft corner glow inside a bento card — set --c to any color */
-.card-glow::before {
+/* Gradient hairline border wrapper */
+.grad-border {
+  position: relative;
+}
+.grad-border::before {
   content: "";
   position: absolute;
-  top: -40%;
-  right: -30%;
-  width: 70%;
-  height: 90%;
-  border-radius: 9999px;
-  background: radial-gradient(circle, var(--c, #6366f1) 0%, transparent 65%);
-  opacity: 0.18;
-  filter: blur(30px);
-  transition: opacity 0.4s ease;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(130deg, rgba(91, 124, 250, 0.6), rgba(109, 124, 255, 0.5), rgba(168, 85, 247, 0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.35s ease;
 }
-.card-glow:hover::before {
-  opacity: 0.32;
+.grad-border:hover::before {
+  opacity: 1;
 }
 
-/* Dotted background texture */
-.dots {
+/* Fixed background: animated gradient blobs */
+.aurora {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(
-    rgba(255, 255, 255, 0.05) 1px,
-    transparent 1px
-  );
-  background-size: 26px 26px;
-  mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 75%);
+  overflow: hidden;
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+.aurora::before {
+  top: -18%;
+  left: -8%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 720px;
+  max-height: 720px;
+  background: conic-gradient(from 120deg, #5b7cfa, #a855f7, #6d7cff, #5b7cfa);
+  opacity: 0.22;
+  animation: spin 32s linear infinite;
+}
+.aurora::after {
+  bottom: -22%;
+  right: -10%;
+  width: 48vw;
+  height: 48vw;
+  max-width: 640px;
+  max-height: 640px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.55), rgba(91, 124, 250, 0.28) 45%, transparent 70%);
+  opacity: 0.45;
 }
 
-/* Ambient top glow */
-.ambient {
+/* Faint dotted grid texture */
+.grid-tex {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-      ellipse 80% 50% at 50% -10%,
-      rgba(99, 102, 241, 0.18),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 85% 10%,
-      rgba(34, 211, 238, 0.1),
-      transparent 60%
-    );
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 15%, transparent 75%);
 }
 
 .shimmer {
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.55) 50%, transparent 100%);
   background-size: 200% 100%;
 }
 

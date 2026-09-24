@@ -32,9 +32,18 @@ npm run build
 npm start
 ```
 
+## 🔄 CI / CD Pipeline
+
+Continuous Integration and Continuous Deployment is configured via **GitHub Actions**:
+- **CI Workflow**: [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) automatically runs dependency verification, Next.js cache restoration, and production builds on pushes and pull requests.
+- **CD Deployment**: Automatically deploys to Vercel upon merging to `main`/`master` (or manual trigger).
+- **GitHub Pages**: Optional static export workflow available at [`.github/workflows/deploy-gh-pages.yml`](.github/workflows/deploy-gh-pages.yml).
+- See the complete [CI/CD Guide](docs/CI_CD_GUIDE.md) for configuration instructions.
+
 ## 🧱 Stack
 
 - Next.js 14 (App Router)
 - Tailwind CSS 3
 - Framer Motion
 - lucide-react icons
+

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "motion/react";
 
 /** Soft indigo glow trailing the cursor over the dark bento backdrop. */
 export default function CursorGlow() {
@@ -31,7 +31,7 @@ export default function CursorGlow() {
         x: sx,
         y: sy,
         background:
-          "radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(34,211,238,0.05) 42%, transparent 70%)",
+          "radial-gradient(circle, rgba(168,85,247,0.08) 0%, rgba(91,124,250,0.04) 42%, transparent 70%)",
       }}
     />
   );

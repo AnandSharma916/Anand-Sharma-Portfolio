@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Search, CornerDownLeft, Compass, Mail, Copy, ArrowUp } from "lucide-react";
 import { navLinks, profile } from "@/lib/data";
 
@@ -102,7 +102,7 @@ export default function CommandPalette() {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[90] flex items-start justify-center px-4 pt-[18vh]"
+          className="fixed inset-0 z-[90] flex items-start justify-center px-3 pb-6 pt-[10vh] xs:px-4 sm:pt-[18vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -118,26 +118,26 @@ export default function CommandPalette() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.21, 0.5, 0.27, 1] }}
-            className="bento relative z-10 w-full max-w-xl overflow-hidden !p-0 shadow-2xl"
+            className="glass relative z-10 w-full max-w-xl overflow-hidden !bg-panel/95 !p-0 shadow-2xl backdrop-blur-xl"
           >
-            <div className="flex items-center gap-3 border-b border-white/10 px-4">
-              <Search size={18} className="text-white/40" />
+            <div className="flex items-center gap-3 border-b border-white/[0.08] px-4">
+              <Search size={18} className="text-ink-muted" />
               <input
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onInputKey}
                 placeholder="Jump to a section or run a command…"
-                className="w-full bg-transparent py-4 text-[15px] text-white placeholder:text-white/35 focus:outline-none"
+                className="w-full bg-transparent py-4 text-[15px] text-ink placeholder:text-ink-soft focus:outline-none"
               />
-              <kbd className="hidden rounded-md border border-white/15 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-white/45 sm:block">
+              <kbd className="hidden rounded-md border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 font-mono text-[11px] text-ink-muted sm:block">
                 ESC
               </kbd>
             </div>
 
-            <ul className="max-h-80 overflow-y-auto p-2">
+            <ul className="max-h-[min(20rem,55vh)] overflow-y-auto p-2">
               {filtered.length === 0 && (
-                <li className="px-3 py-6 text-center text-sm text-white/40">
+                <li className="px-3 py-6 text-center text-sm text-ink-muted">
                   No matches for “{query}”
                 </li>
               )}
@@ -150,26 +150,26 @@ export default function CommandPalette() {
                       onClick={() => select(item)}
                       onMouseEnter={() => setActive(i)}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${
-                        isActive ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"
+                        isActive ? "bg-white/[0.05]" : "hover:bg-white/[0.04]"
                       }`}
                     >
                       <span
                         className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
                           isActive
-                            ? "bg-gradient-to-br from-indigo-500 to-cyan-400 text-white"
-                            : "bg-white/5 text-white/50"
+                            ? "bg-gradient-to-br from-pink-500 to-pink-600 text-white"
+                            : "bg-white/[0.04] text-ink-muted"
                         }`}
                       >
                         <Icon size={15} />
                       </span>
-                      <span className="flex-1">
-                        <span className="block text-sm text-white/90">{item.label}</span>
-                        <span className="block font-mono text-xs text-white/35">{item.hint}</span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm text-ink">{item.label}</span>
+                        <span className="block truncate font-mono text-xs text-ink-soft">{item.hint}</span>
                       </span>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-white/30">
+                      <span className="hidden shrink-0 font-mono text-[11px] uppercase tracking-wider text-ink-faint xs:block">
                         {item.group}
                       </span>
-                      {isActive && <CornerDownLeft size={14} className="text-white/50" />}
+                      {isActive && <CornerDownLeft size={14} className="text-ink-muted" />}
                     </button>
                   </li>
                 );

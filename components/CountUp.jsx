@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
+import { useInView } from "motion/react";
 
 // Splits "1.5+" -> { target: 1.5, suffix: "+", decimals: 1 }
 function parse(value) {
@@ -13,12 +13,16 @@ function parse(value) {
 
 export default function CountUp({ value, duration = 1700 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
+  // once: false — replays the count every time the section scrolls back into view
+  const inView = useInView(ref, { margin: "-15% 0px" });
   const { target, suffix, decimals } = parse(value);
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView) {
+      setDisplay(0); // reset so the next entry counts up from scratch
+      return;
+    }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setDisplay(target);
       return;

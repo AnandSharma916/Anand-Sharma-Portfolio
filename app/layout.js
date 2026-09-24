@@ -1,10 +1,11 @@
 import "./globals.css";
-import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import { profile } from "@/lib/data";
 
-const display = Plus_Jakarta_Sans({
+// Bricolage Grotesque — a characterful, optically-sized display grotesk.
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
@@ -35,7 +36,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
     >
-      <body className="font-sans">{children}</body>
+      <body className="bg-base font-sans text-ink">{children}</body>
     </html>
   );
 }
