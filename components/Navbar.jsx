@@ -92,7 +92,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <a
             href={profile.resume}
-            download
+            download="Anand-Sharma-Resume.pdf"
             className="hidden items-center gap-1.5 rounded-xl border border-iris-500/30 bg-iris-500/15 px-3.5 py-2 text-sm font-semibold text-iris-800 shadow-[0_6px_18px_-10px_rgba(168,85,247,0.8)] transition-all duration-300 hover:scale-[1.04] hover:border-iris-500/60 hover:bg-iris-500/30 hover:text-white hover:shadow-[0_10px_26px_-8px_rgba(168,85,247,0.75)] lg:flex"
           >
             <Download size={14} />
@@ -141,7 +141,7 @@ export default function Navbar() {
             ))}
             <a
               href={profile.resume}
-              download
+              download="Anand-Sharma-Resume.pdf"
               onClick={() => setOpen(false)}
               className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-iris-500/30 bg-iris-500/15 px-4 py-3 text-sm font-semibold text-iris-800 transition-colors hover:border-iris-500/60 hover:bg-iris-500/30 hover:text-white"
             >
