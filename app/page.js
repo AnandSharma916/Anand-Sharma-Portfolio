@@ -19,6 +19,7 @@ import Education from "@/components/Education";
 // import Achievements from "@/components/Achievements";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
       <SmoothScroll />
       <CommandPalette />
       <HireMeModal />
+      <WhatsAppButton />
       <div className="aurora" />
       <div className="grid-tex" />
       <CursorGlow />
