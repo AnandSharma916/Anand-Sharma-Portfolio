@@ -142,7 +142,7 @@ export async function POST(req) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Project Enquiry</title>
+  <title>New Message — Anand Sharma Portfolio</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
   <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1f5f9; padding: 32px 16px;">
@@ -163,13 +163,13 @@ export async function POST(req) {
                 <tr>
                   <td>
                     <div style="display: inline-block; padding: 5px 12px; background-color: #eef2ff; border-radius: 9999px; color: #4f46e5; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;">
-                      ⚡ New Portfolio Lead
+                      📩 Portfolio Contact Form
                     </div>
                     <h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; line-height: 1.3;">
-                      New Project Enquiry Received
+                      New Message from ${safeName}
                     </h1>
                     <p style="margin: 6px 0 0; font-size: 13px; color: #64748b;">
-                      Submitted on ${formattedDate} IST &bull; via Anand Sharma Portfolio
+                      Received on ${formattedDate} IST &bull; via anand-sharma-portfolio
                     </p>
                   </td>
                 </tr>
@@ -177,19 +177,19 @@ export async function POST(req) {
             </td>
           </tr>
 
-          <!-- Client Details Card -->
+          <!-- Contact Details Card -->
           <tr>
             <td style="padding: 24px 32px;">
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 24px;">
                 <tr>
-                  <td style="padding: 18px 20px; border-bottom: 1px solid #e2e8f0;">
+                  <td style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0;">
                     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td width="28" style="vertical-align: middle;">
                           <span style="font-size: 18px;">👤</span>
                         </td>
                         <td style="vertical-align: middle;">
-                          <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Client Name</div>
+                          <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Name</div>
                           <div style="font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 2px;">${safeName}</div>
                         </td>
                       </tr>
@@ -198,14 +198,14 @@ export async function POST(req) {
                 </tr>
 
                 <tr>
-                  <td style="padding: 18px 20px; border-bottom: 1px solid #e2e8f0;">
+                  <td style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0;">
                     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td width="28" style="vertical-align: middle;">
                           <span style="font-size: 18px;">✉️</span>
                         </td>
                         <td style="vertical-align: middle;">
-                          <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Email Address</div>
+                          <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Email</div>
                           <div style="margin-top: 2px;">
                             <a href="mailto:${safeEmail}" style="font-size: 15px; font-weight: 600; color: #4f46e5; text-decoration: none;">${safeEmail}</a>
                           </div>
@@ -216,14 +216,14 @@ export async function POST(req) {
                 </tr>
 
                 <tr>
-                  <td style="padding: 18px 20px;">
+                  <td style="padding: 16px 20px;">
                     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td width="28" style="vertical-align: middle;">
                           <span style="font-size: 18px;">📞</span>
                         </td>
                         <td style="vertical-align: middle;">
-                          <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Phone Number</div>
+                          <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Phone</div>
                           <div style="font-size: 15px; font-weight: 600; color: #0f172a; margin-top: 2px;">
                             ${safePhone}
                           </div>
@@ -234,12 +234,12 @@ export async function POST(req) {
                 </tr>
               </table>
 
-              <!-- Action Buttons Row -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
+              <!-- Quick Reply Actions -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 24px;">
                 <tr>
                   <td style="padding-bottom: 8px;">
                     <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">
-                      ⚡ Quick Response Actions
+                      Quick Actions
                     </div>
                   </td>
                 </tr>
@@ -255,7 +255,7 @@ export async function POST(req) {
                         </td>
                         ` : ''}
                         <td style="${whatsappUrl ? 'padding-left: 8px; width: 50%;' : 'width: 100%;'}">
-                          <a href="mailto:${safeEmail}?subject=${encodeURIComponent(`Re: Project Enquiry - Anand Sharma`)}" style="display: block; text-align: center; background-color: #4f46e5; color: #ffffff; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);">
+                          <a href="mailto:${safeEmail}?subject=${encodeURIComponent(`Re: Connecting via Portfolio - Anand Sharma`)}" style="display: block; text-align: center; background-color: #4f46e5; color: #ffffff; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);">
                             ✉️ Reply via Email
                           </a>
                         </td>
@@ -265,12 +265,12 @@ export async function POST(req) {
                 </tr>
               </table>
 
-              <!-- Message Content Section -->
+              <!-- Message Section -->
               <div style="margin-bottom: 24px;">
                 <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">
-                  💬 Client Message / Requirements
+                  💬 Message
                 </div>
-                <div style="background-color: #f8fafc; border-left: 4px solid #4f46e5; border-radius: 8px; padding: 20px 22px; color: #1e293b; font-size: 15px; line-height: 1.65; white-space: normal; word-break: break-word;">
+                <div style="background-color: #f8fafc; border-left: 4px solid #4f46e5; border-radius: 8px; padding: 18px 20px; color: #1e293b; font-size: 15px; line-height: 1.65; white-space: normal; word-break: break-word;">
                   ${safeMessage}
                 </div>
               </div>
@@ -282,7 +282,7 @@ export async function POST(req) {
           <tr>
             <td style="padding: 20px 32px 28px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center;">
               <p style="margin: 0; font-size: 13px; color: #64748b;">
-                Tip: You can directly click <b>Reply</b> in Gmail to respond to <a href="mailto:${safeEmail}" style="color: #4f46e5; text-decoration: none; font-weight: 600;">${safeEmail}</a>.
+                Tip: Directly click <b>Reply</b> in Gmail to respond to <a href="mailto:${safeEmail}" style="color: #4f46e5; text-decoration: none; font-weight: 600;">${safeEmail}</a>.
               </p>
               <p style="margin: 8px 0 0; font-size: 11px; color: #94a3b8;">
                 Anand Sharma Portfolio &bull; Sent automatically via Next.js Server
@@ -299,17 +299,17 @@ export async function POST(req) {
     `;
 
     const plainTextContent = `=====================================================
-🚀 NEW PROJECT ENQUIRY — ANAND SHARMA PORTFOLIO
+New Message — Anand Sharma Portfolio
 =====================================================
 
 Received: ${formattedDate} IST
 
-CLIENT DETAILS:
+FROM:
 - Name:  ${trimmedName || "Visitor"}
 - Email: ${trimmedEmail}
 - Phone: ${trimmedPhone || "Not provided"}
 
-MESSAGE / REQUIREMENTS:
+MESSAGE:
 -----------------------------------------------------
 ${trimmedMessage}
 -----------------------------------------------------
@@ -325,12 +325,12 @@ Direct reply to this email will reach ${trimmedEmail}.`;
       from: `"Portfolio Updates" <${userEmail}>`,
       to: receiverEmail,
       replyTo: trimmedEmail,
-      subject: `🔔 [Portfolio Update] New Enquiry from ${trimmedName || "New Client"} (${trimmedPhone || trimmedEmail})`,
+      subject: `📩 [Portfolio] Message from ${trimmedName || "Visitor"} (${trimmedPhone || trimmedEmail})`,
       headers: {
         "Auto-Submitted": "auto-generated",
         "X-Auto-Response-Suppress": "All",
         "X-Category": "Updates",
-        "X-Entity-Ref-ID": `lead-${Date.now()}`,
+        "X-Entity-Ref-ID": `msg-${Date.now()}`,
         "Precedence": "notification",
       },
       text: plainTextContent,
