@@ -41,7 +41,7 @@ function validate(v) {
   }
 
   if (!v.message.trim()) {
-    e.message = "Tell me a little about the project.";
+    e.message = "Please write a brief message.";
   } else if (v.message.trim().length < 10) {
     e.message = "A few more words, please (min 10 characters).";
   }
@@ -62,7 +62,7 @@ export default function ContactForm({
   titleId,
   heading = "Hire Me",
   kicker = "Let's work together",
-  description = "Tell me how to reach you and what you're building — I reply within 24 hours.",
+  description = "Have an opportunity, job opening, or project in mind? Drop a message and I'll reply within 24 hours.",
 }) {
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
@@ -284,7 +284,7 @@ export default function ContactForm({
           idPrefix={idPrefix}
           name="message"
           label="Message"
-          placeholder="Tell me a bit about your project, timeline, and requirements…"
+          placeholder="Hi Anand, I'd like to discuss a job role / opportunity / project…"
           Icon={MessageSquare}
           value={values.message}
           onChange={setField("message")}

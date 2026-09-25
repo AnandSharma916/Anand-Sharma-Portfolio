@@ -9,7 +9,7 @@ export default function WhatsAppButton() {
 
   const cleanPhone = (profile.phone || "+919479454314").replace(/[^\d]/g, "");
   const defaultMessage = encodeURIComponent(
-    "Hi Anand, I came across your portfolio and would like to connect regarding a project!"
+    "Hi Anand, I came across your portfolio and would like to connect with you!"
   );
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${defaultMessage}`;
 
