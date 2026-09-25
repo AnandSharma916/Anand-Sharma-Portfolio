@@ -18,32 +18,46 @@ import { burst } from "./ConfettiButton";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+(]?[\d][\d\s().-]{6,}$/;
 
-const EMPTY = { name: "", email: "", phone: "", message: "", honeypot: "" };
+const EMPTY = { name: "", email: "", phone: "", message: "", honeypot: "", user_fax_id: "" };
 
 function validate(v) {
   const e = {};
-  if (!v.name.trim()) {
+  const trimmedName = v.name.trim();
+  if (!trimmedName) {
     e.name = "Your name is required.";
-  } else if (v.name.trim().length < 2) {
+  } else if (trimmedName.length < 2) {
     e.name = "Name must be at least 2 characters.";
+  } else if (/https?:\/\/|\.com|\.net|\.org|www\./i.test(trimmedName)) {
+    e.name = "Name cannot contain website links.";
   }
 
-  if (!v.email.trim()) {
+  const trimmedEmail = v.email.trim();
+  if (!trimmedEmail) {
     e.email = "Email is required.";
-  } else if (!EMAIL_RE.test(v.email.trim())) {
+  } else if (!EMAIL_RE.test(trimmedEmail)) {
     e.email = "Enter a valid email address.";
   }
 
-  if (!v.phone.trim()) {
+  const trimmedPhone = v.phone.trim();
+  const digits = trimmedPhone.replace(/\D/g, "");
+  if (!trimmedPhone) {
     e.phone = "Phone number is required.";
-  } else if (!PHONE_RE.test(v.phone.trim())) {
-    e.phone = "Enter a valid phone number.";
+  } else if (digits.length < 7 || digits.length > 15 || !PHONE_RE.test(trimmedPhone)) {
+    e.phone = "Enter a valid phone number (7 to 15 digits).";
+  } else if (/^(\d)\1{6,}$/.test(digits) || /^(0123456789|1234567890|9876543210|12345678)$/.test(digits)) {
+    e.phone = "Please provide a genuine phone number.";
   }
 
-  if (!v.message.trim()) {
+  const trimmedMessage = v.message.trim();
+  if (!trimmedMessage) {
     e.message = "Please write a brief message.";
-  } else if (v.message.trim().length < 10) {
+  } else if (trimmedMessage.length < 10) {
     e.message = "A few more words, please (min 10 characters).";
+  } else {
+    const urls = trimmedMessage.match(/https?:\/\/|www\./gi) || [];
+    if (urls.length > 1) {
+      e.message = "Please remove external promotional links from your message.";
+    }
   }
 
   return e;
@@ -71,12 +85,14 @@ export default function ContactForm({
 
   const formRef = useRef(null);
   const firstFieldRef = useRef(null);
+  const mountedAtRef = useRef(Date.now());
 
   useEffect(() => {
     setValues(EMPTY);
     setErrors({});
     setStatus("idle");
     setServerError("");
+    mountedAtRef.current = Date.now();
   }, [resetKey]);
 
   useEffect(() => {
@@ -110,7 +126,7 @@ export default function ContactForm({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, mountedAt: mountedAtRef.current }),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -187,12 +203,22 @@ export default function ContactForm({
 
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate className="relative">
-      {/* Honeypot field for bot protection */}
+      {/* Honeypot fields for bot & automated spam protection */}
       <input
         type="text"
         name="honeypot"
         value={values.honeypot}
         onChange={setField("honeypot")}
+        style={{ display: "none" }}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
+      <input
+        type="text"
+        name="user_fax_id"
+        value={values.user_fax_id}
+        onChange={setField("user_fax_id")}
         style={{ display: "none" }}
         tabIndex={-1}
         autoComplete="off"

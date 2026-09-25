@@ -43,6 +43,44 @@ function isRateLimited(ip) {
   return false;
 }
 
+// Disposable / Throwaway email domains blocklist
+const DISPOSABLE_EMAIL_DOMAINS = new Set([
+  "mailinator.com",
+  "guerrillamail.com",
+  "tempmail.com",
+  "10minutemail.com",
+  "yopmail.com",
+  "throwawaymail.com",
+  "dispostable.com",
+  "trashmail.com",
+  "sharklasers.com",
+  "getairmail.com",
+  "generator.email",
+  "fakemailgenerator.com",
+  "temp-mail.org",
+  "tempmailo.com",
+  "mohmal.com",
+  "crazymailing.com",
+  "mailnesia.com",
+  "mytemp.email",
+]);
+
+// Spam keywords commonly used by automated spam bots
+const SPAM_KEYWORDS = [
+  "viagra",
+  "cialis",
+  "casino",
+  "crypto investment",
+  "forex trade",
+  "page 1 on google",
+  "rank on google",
+  "seo backlink",
+  "buy backlinks",
+  "guest posting service",
+  "dating site",
+  "adult content",
+];
+
 export async function POST(req) {
   try {
     const forwarded = req.headers.get("x-forwarded-for");
@@ -56,39 +94,102 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const { name, email, phone, message, honeypot } = body;
+    const { name, email, phone, message, honeypot, user_fax_id, mountedAt } = body;
 
-    // Spam honeypot: bots usually fill hidden fields
-    if (honeypot) {
-      return NextResponse.json({ success: true, message: "Enquiry submitted successfully." });
+    // 1. Double Honeypot: Automated bots fill hidden fields
+    if (honeypot || user_fax_id) {
+      return NextResponse.json({ success: true, message: "Your message has been sent successfully!" });
     }
 
-    // Input Validation
-    const trimmedEmail = typeof email === "string" ? email.trim() : "";
-    const trimmedPhone = typeof phone === "string" ? phone.trim() : "";
-    const trimmedMessage = typeof message === "string" ? message.trim() : "";
-    const trimmedName = typeof name === "string" ? name.trim() : "";
+    // 2. Speed Trap: Real humans take at least 2.5 seconds to fill the form
+    if (mountedAt && Date.now() - Number(mountedAt) < 2500) {
+      return NextResponse.json({ success: true, message: "Your message has been sent successfully!" });
+    }
 
-    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    // 3. Name Validation: Real names only, no links or spam codes
+    const trimmedName = typeof name === "string" ? name.trim() : "";
+    if (!trimmedName || trimmedName.length < 2 || trimmedName.length > 70) {
+      return NextResponse.json(
+        { error: "Please enter your real name (at least 2 characters)." },
+        { status: 400 }
+      );
+    }
+    if (/https?:\/\/|\.com|\.net|\.org|\.ru|www\./i.test(trimmedName)) {
+      return NextResponse.json(
+        { error: "Name field cannot contain website links or URLs." },
+        { status: 400 }
+      );
+    }
+
+    // 4. Email Validation & Disposable Domain Block
+    const trimmedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!trimmedEmail || !EMAIL_RE.test(trimmedEmail)) {
       return NextResponse.json(
         { error: "Please provide a valid email address." },
         { status: 400 }
       );
     }
-
-    if (!trimmedMessage || trimmedMessage.length < 5) {
+    const domain = trimmedEmail.split("@")[1];
+    if (DISPOSABLE_EMAIL_DOMAINS.has(domain)) {
       return NextResponse.json(
-        { error: "Please write a brief message (at least 5 characters)." },
+        { error: "Temporary/disposable email addresses are not accepted. Please use your genuine email." },
         { status: 400 }
       );
     }
 
+    // 5. Phone Validation & Fake Dummy Number Detection
+    const trimmedPhone = typeof phone === "string" ? phone.trim() : "";
+    const phoneDigits = trimmedPhone.replace(/\D/g, "");
+    if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+      return NextResponse.json(
+        { error: "Please provide a valid phone number (7 to 15 digits)." },
+        { status: 400 }
+      );
+    }
+    // Block repeating digits (e.g., 00000000, 11111111) or sequential numbers (e.g., 1234567890)
+    const isRepeatedDigits = /^(\d)\1{6,}$/.test(phoneDigits);
+    const isDummySequence = /^(0123456789|1234567890|9876543210|12345678|123456789)$/.test(phoneDigits);
+    if (isRepeatedDigits || isDummySequence) {
+      return NextResponse.json(
+        { error: "Please provide a genuine contact number." },
+        { status: 400 }
+      );
+    }
+
+    // 6. Message Validation & Anti-Link-Spam Protection
+    const trimmedMessage = typeof message === "string" ? message.trim() : "";
+    if (!trimmedMessage || trimmedMessage.length < 10) {
+      return NextResponse.json(
+        { error: "Please write a brief message (minimum 10 characters)." },
+        { status: 400 }
+      );
+    }
     if (trimmedMessage.length > 3000) {
       return NextResponse.json(
         { error: "Message is too long (maximum 3000 characters)." },
         { status: 400 }
       );
+    }
+
+    // Block promotional link spam (more than 1 URL in message)
+    const urlMatches = trimmedMessage.match(/https?:\/\/|www\./gi) || [];
+    if (urlMatches.length > 1) {
+      return NextResponse.json(
+        { error: "Link spam is not permitted. Please remove external promotional links." },
+        { status: 400 }
+      );
+    }
+
+    // Block known automated spam keywords
+    const lowerMessage = trimmedMessage.toLowerCase();
+    for (const kw of SPAM_KEYWORDS) {
+      if (lowerMessage.includes(kw)) {
+        return NextResponse.json(
+          { error: "Message was rejected by spam protection filter." },
+          { status: 400 }
+        );
+      }
     }
 
     const userEmail = process.env.GMAIL_USER || process.env.EMAIL_USER;
